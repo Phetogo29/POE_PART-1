@@ -1,0 +1,165 @@
+/* ==========================================================================
+   Khaya Animal Shelter - css/style.css   (WEDE5020 Part 2)
+   Author: Phetogo Komane (ST10502851)
+   One external stylesheet linked from all five pages.
+   Approach: desktop-first; set styles on body/elements and let them cascade,
+   classes only where an element needs something different.
+   1 Reset + tokens   2 Typography   3 Page layout   4 Components
+   5 Forms + tables   6 Responsive (tablet, mobile)
+   ========================================================================== */
+
+/* 1. RESET + BASE TOKENS ---------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* colour scheme from the Part 1 proposal: green, brown, white, light neutrals */
+  --green: #2e6b3f;  --green-dark: #1f4a2c;
+  --brown: #7a5230;  --brown-dark: #3f2b1a;
+  --cream: #faf6ee;  --cream-alt: #f0e9da;
+  --ink: #2b2a26;    --white: #fff;  --line: #d9cfba;
+  /* typography scale (ratio 1.25) - overridden inside the media queries */
+  --font: Aptos, Arial, "Helvetica Neue", sans-serif;
+  --fs-h1: 2.5rem;  --fs-h2: 1.75rem;  --fs-h3: 1.25rem;  --fs-small: .875rem;
+  /* spacing + shape */
+  --gap: 1.5rem;  --pad-y: 3.5rem;  --radius: .75rem;
+  --gutter: max(1.25rem, calc((100% - 70rem) / 2));   /* centres content, max 70rem */
+  --shadow: 0 .25rem 1rem rgb(63 43 26 / .12);
+}
+
+html { scroll-padding-top: 5rem; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+/* 2. TYPOGRAPHY (set once on body, everything else inherits) ---------- */
+body {
+  font: 1rem/1.65 var(--font);
+  color: var(--ink);
+  background: var(--cream);
+}
+h1, h2, h3 { line-height: 1.2; font-weight: 700; color: var(--green-dark); margin-block-end: .5em; }
+h1 { font-size: var(--fs-h1); letter-spacing: -.01em; }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-h3); }
+p, ul, table, form, figure, address { margin-block-end: 1em; }
+p { max-width: 65ch; }
+ul { padding-inline-start: 1.25rem; }
+address { font-style: normal; }
+small, footer { font-size: var(--fs-small); }
+.lead { font-size: 1.25rem; color: var(--brown-dark); }
+a { color: var(--green); text-underline-offset: .2em; }
+main a:hover { color: var(--brown); }
+:focus-visible { outline: .1875rem solid var(--brown); outline-offset: .1875rem; }
+img, picture { display: block; max-width: 100%; height: auto; }
+
+/* 3. PAGE LAYOUT (desktop) - grid-template-areas on the body ---------- */
+body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "header" "main" "footer";
+  min-height: 100vh;
+}
+header { grid-area: header; }
+main   { grid-area: main; }
+footer { grid-area: footer; }
+
+.skip-link { position: absolute; left: 1rem; top: -4rem; z-index: 20; padding: .5rem 1rem;
+             background: var(--brown-dark); color: var(--white); }
+.skip-link:focus { top: .5rem; }
+
+/* header + nav: flexbox */
+header {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+  gap: .75rem var(--gap);
+  padding: .75rem var(--gutter);
+  background: var(--green-dark); color: var(--white);
+  box-shadow: var(--shadow);
+}
+header > a { display: flex; align-items: center; gap: .75rem; color: inherit;
+             font-size: 1.25rem; font-weight: 700; text-decoration: none; }
+header img { width: 2.5rem; height: 2.5rem; border-radius: 50%; object-fit: cover; background: var(--white); }
+header :focus-visible { outline-color: var(--cream); }
+nav ul { display: flex; gap: .25rem; list-style: none; padding: 0; margin: 0; }
+nav a { display: block; padding: .5rem 1rem; border-radius: 2rem; color: var(--white);
+        letter-spacing: .02em; text-decoration: none; transition: background .2s; }
+nav a:hover, nav a:focus-visible { background: rgb(255 255 255 / .2); }
+nav a:active { background: rgb(255 255 255 / .35); }
+nav a[aria-current="page"] { background: var(--cream); color: var(--green-dark); font-weight: 700; }
+
+/* sections: full-width bands, content held to 70rem by --gutter */
+main > section { padding: var(--pad-y) var(--gutter); }
+main > section:nth-child(even) { background: var(--cream-alt); }
+main > section:first-child { background: linear-gradient(135deg, var(--cream-alt), #e3ecd9);
+                             padding-block: calc(var(--pad-y) * 1.3); }
+main > section.callout { text-align: center; background: var(--cream); border-block: .25rem solid var(--line); }
+.callout p { margin-inline: auto; }
+main > section > :last-child { margin-block-end: 0; }
+
+/* two-column layout */
+.split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gap) 3rem; align-items: center; }
+.split img { width: 100%; border-radius: var(--radius); box-shadow: var(--shadow); }
+
+footer { grid-area: footer; padding: 2rem var(--gutter); background: var(--brown-dark);
+         color: var(--cream); text-align: center; }
+footer p, footer address { margin: 0 auto .25rem; max-width: none; }
+
+/* 4. COMPONENTS ------------------------------------------------------- */
+.btn, button {
+  display: inline-block; margin: 0 .5rem .5rem 0; padding: .75rem 1.5rem;
+  border: .125rem solid var(--green); border-radius: 2rem;
+  background: var(--green); color: var(--white);
+  font: inherit; font-weight: 700; letter-spacing: .02em; text-decoration: none; cursor: pointer;
+  transition: background .2s, color .2s, transform .1s;
+}
+.btn:hover, button:hover { background: var(--green-dark); border-color: var(--green-dark); color: var(--white); }
+.btn:active, button:active { transform: translateY(.0625rem) scale(.98); }
+.btn.alt { background: transparent; color: var(--green-dark); }
+.btn.alt:hover { background: var(--green); border-color: var(--green); }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: var(--gap);
+         list-style: none; padding: 0; }
+.stats li { padding: 1.5rem 1rem; text-align: center; background: var(--white);
+            border-top: .25rem solid var(--brown); border-radius: var(--radius); box-shadow: var(--shadow); }
+.stats strong { display: block; font-size: 2.25rem; line-height: 1.1; color: var(--green); }
+
+.cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); margin-block: 1.5rem; }
+.cards > * { margin: 0; padding-bottom: 1rem; overflow: hidden; background: var(--white);
+             border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+             transition: transform .2s, box-shadow .2s; }
+.cards > *:hover, .cards > *:focus-within { transform: translateY(-.25rem); box-shadow: 0 .5rem 1.5rem rgb(63 43 26 / .22); }
+.cards img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.cards :is(h3, p, figcaption) { padding-inline: 1rem; }
+.cards h3, .cards figcaption { padding-top: 1rem; }
+.cards figcaption { font-weight: 700; color: var(--green-dark); }
+.cards p:last-child, .cards h3 { margin-block-end: .5rem; }
+
+/* 5. FORMS + TABLES --------------------------------------------------- */
+label { display: block; margin-block-end: .25rem; font-weight: 700; }
+input, select, textarea { display: block; width: 100%; padding: .65rem .75rem; font: inherit; color: inherit;
+                          background: var(--white); border: .125rem solid var(--line); border-radius: .5rem; }
+input:focus, select:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 .25rem rgb(46 107 63 / .25); }
+textarea { min-height: 8rem; resize: vertical; }
+table { width: 100%; border-collapse: collapse; background: var(--white); }
+th, td { padding: .75rem 1rem; text-align: left; border-bottom: 1px solid var(--line); }
+th { width: 35%; background: var(--cream-alt); color: var(--brown-dark); }
+
+/* 6. RESPONSIVE - desktop-first, breakpoints in em ---------------------- */
+/* Tablet: 1024px and below */
+@media (max-width: 64em) {
+  :root { --fs-h1: 2.125rem; --fs-h2: 1.5rem; --pad-y: 3rem; }
+  .split { column-gap: 2rem; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  nav a { padding: .5rem .75rem; }
+}
+/* Mobile: 640px and below - single column, stacked header, full-width buttons */
+@media (max-width: 40em) {
+  :root { --fs-h1: 1.875rem; --fs-h2: 1.375rem; --fs-h3: 1.125rem; --pad-y: 2.25rem; --gap: 1rem; }
+  html { scroll-padding-top: 1rem; }
+  header { position: static; flex-direction: column; align-items: flex-start; }
+  nav, nav ul { width: 100%; }
+  nav ul { flex-wrap: wrap; }
+  .split, .cards { grid-template-columns: minmax(0, 1fr); }
+  .btn, button { display: block; margin-right: 0; text-align: center; width: 100%; }
+  th, td { display: block; width: 100%; }
+  th { border-bottom: 0; }
+}
